@@ -1,24 +1,33 @@
 package multithreading;
+import dao.MessageDaoImpl;
+import dao.QuestionDaoImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import service.MessageService;
+import service.QuestionService;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Acceptor implements Runnable{
 
-
     private static int   PORT = 8080;
     private ServerSocket serverSocket;
     private boolean      isStopped    = false;
+    private MessageService messageService = new MessageService();
+    private QuestionService questionService = new QuestionService();
 
+
+    public Acceptor(){};
 
     public Acceptor(int PORT){
         Acceptor.PORT = PORT;
     }
 
-
-    public void run(){
-
-
+    public void run()
+    {
 
             openServerSocket();
 
@@ -39,9 +48,11 @@ public class Acceptor implements Runnable{
 
                 System.out.println("connect");
 
-                new Thread(new Worker(clientSocket)).start();
+               // new Thread(new Worker(clientSocket)).start();
+                new Thread(new Worker(clientSocket,messageService,questionService)).start();
             }
-    }
+
+     }
 
     private synchronized boolean isStopped() {
         return this.isStopped;
@@ -60,6 +71,7 @@ public class Acceptor implements Runnable{
         try {
             serverSocket = new ServerSocket(PORT);
         } catch (IOException e) {
+
             throw new RuntimeException("Cannot open port" + PORT + " : " ,  e);
         }
     }
