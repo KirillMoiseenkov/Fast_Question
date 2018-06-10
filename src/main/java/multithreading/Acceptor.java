@@ -11,14 +11,18 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+@Service
 public class Acceptor implements Runnable{
 
     private static int   PORT = 8080;
     private ServerSocket serverSocket;
     private boolean      isStopped    = false;
-    private MessageService messageService = new MessageService();
-    private QuestionService questionService = new QuestionService();
 
+    @Autowired
+    private MessageService messageService;
+
+    @Autowired
+    private QuestionService questionService;
 
     public Acceptor(){};
 
@@ -48,8 +52,8 @@ public class Acceptor implements Runnable{
 
                 System.out.println("connect");
 
-               // new Thread(new Worker(clientSocket)).start();
-                new Thread(new Worker(clientSocket,messageService,questionService)).start();
+            //    new Thread(new Worker(clientSocket)).start();
+               new Thread(new Worker(clientSocket,messageService,questionService)).start();
             }
 
      }

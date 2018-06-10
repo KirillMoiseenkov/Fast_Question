@@ -2,6 +2,7 @@ import dao.QuestionDaoImpl;
 import dao.TestDAO;
 import models.Message;
 import models.Question;
+import multithreading.Acceptor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import service.*;
@@ -14,10 +15,10 @@ public class main {
 
         ApplicationContext context = new ClassPathXmlApplicationContext("Spring.xml");
 
-        TestServices testServices = context.getBean(TestServices.class);
 
-        System.out.println(testServices.testService.getAll().toString());
 
+        Acceptor acceptor = context.getBean(Acceptor.class);
+        new Thread(acceptor).start();
     }
 
 }

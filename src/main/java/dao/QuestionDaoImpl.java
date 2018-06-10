@@ -19,8 +19,6 @@ import java.util.List;
 public class QuestionDaoImpl implements IDAO<Question>{
 
     private static final Logger log = Logger.getLogger(QuestionDaoImpl.class);
-//    private Session session;
-    private Transaction transaction;
 
     @Autowired
     SessionFactory sessionFactory;// = HibernateUtil.getSessionFactory();
@@ -31,62 +29,51 @@ public class QuestionDaoImpl implements IDAO<Question>{
 
 
     public List<Question> getAll() {
-        Session session = sessionFactory.getCurrentSession();
-     //   transaction = session.getTransaction();
-       // transaction.begin();
+        Session session = sessionFactory.openSession();
         List<Question> questionList = session.createQuery("SELECT p FROM Question p").list();
-        //transaction.commit();
+        session.close();
         return questionList;
     }
 
     @Override
     public Question getById(Long id) {
-        Session session = sessionFactory.getCurrentSession();
-        transaction = session.getTransaction();
-        transaction.begin();
+        Session session = sessionFactory.openSession();
         Question question = (Question) session.get(Question.class, id);
-        transaction.commit();
+        session.close();
         return question;
     }
 
 
     public Question create(Question question) {
-        Session  session = sessionFactory.getCurrentSession();
-        transaction = session.getTransaction();
-        transaction.begin();
+        Session  session = sessionFactory.openSession();
         Question newQuestion = (Question) session.merge(question);
+        session.close();
         return newQuestion;
     }
 
     public List<Question> getRandomQuestion(int count){
-        Session  session = sessionFactory.getCurrentSession();
-        transaction = session.getTransaction();
-        transaction.begin();
-
+        Session  session = sessionFactory.openSession();
         List<Question> questionList = (List<Question>) session.createQuery("SELECT p FROM Question p order by rand()")
                 .setMaxResults(count)
                 .list();
-        transaction.commit();
+        session.close();
         return questionList;
     }
 
     public List<Question> getByQuestion(String question){
-        Session   session = sessionFactory.getCurrentSession();
-        transaction = session.getTransaction();
-        transaction.begin();
+        Session   session = sessionFactory.openSession();
         List<Question> questionList = (List<Question>)session.createQuery("SELECT p FROM Question p WHERE p.question = :question")
                 .setParameter("question",question)
                 .list();
-        transaction.commit();
+        session.close();
         return questionList;
     }
 
     @Override
     public Question saveOrUpdate(Question question){
-        Session  session =sessionFactory.getCurrentSession();
-        session.getTransaction().begin();
+        Session  session =sessionFactory.openSession();
         Long id = (Long) session.save(question);
-        session.getTransaction().commit();
+        session.close();
         return getById(id);
     }
 
@@ -96,18 +83,12 @@ public class QuestionDaoImpl implements IDAO<Question>{
     }
 
     public Long saveOrUpdateId(Question question){
-        try {
 
 
-            Session   session = sessionFactory.getCurrentSession();
-            session.getTransaction().begin();
+            Session   session = sessionFactory.openSession();
             Long id = (Long) session.save(question);
-            session.getTransaction().commit();
+             session.close();
             return id;
-        }catch (HibernateException e){
-            log.error(e);
-            //session.getTransaction().rollback();
-            return null;
-        }
+
         }
 }
