@@ -12,12 +12,11 @@ public class main {
     public static void main(String[] args) {
 
 
-        ApplicationContext context = new ClassPathXmlApplicationContext("Spring.xml");
 
-        TestServices testServices = context.getBean(TestServices.class);
-
-        System.out.println(testServices.testService.getAll().toString());
-
+        MessageService messageService = new MessageService();
+        QuestionService questionService = new QuestionService();
+        System.out.println(messageService.getAll().toString());
+        System.out.println(questionService.getAll().toString());
     }
 
 }

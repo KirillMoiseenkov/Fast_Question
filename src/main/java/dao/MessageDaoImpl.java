@@ -19,8 +19,8 @@ public class MessageDaoImpl implements IDAO<Message> {
     private static final Logger log = Logger.getLogger(MessageDaoImpl.class);
 
 
-
-    public MessageDaoImpl() { }
+    public MessageDaoImpl() {
+    }
 
 
     public Message getById(long id) {
@@ -34,10 +34,9 @@ public class MessageDaoImpl implements IDAO<Message> {
             transaction.commit();
             log.info("message get : " + message.toString());
             return message;
-        }catch (HibernateException e)
-        {
+        } catch (HibernateException e) {
             log.error("hibernate exeption : " + e);
-            if(transaction != null)
+            if (transaction != null)
                 transaction.rollback();
             return null;
         }
@@ -48,17 +47,16 @@ public class MessageDaoImpl implements IDAO<Message> {
         Transaction transaction = null;
         try {
             session = HibernateUtil.getSessionFactory().getCurrentSession();
-        transaction = session.getTransaction();
-        transaction.begin();
-        List<Message> messageList = (List<Message>) session.createQuery("SELECT p FROM Message p WHERE p.question_id = :id")
-                .setParameter("id", question).list();
-        transaction.commit();
-        log.info("message list get : " + messageList.toString());
-        return messageList;
-        }catch (HibernateException e)
-        {
+            transaction = session.getTransaction();
+            transaction.begin();
+            List<Message> messageList = (List<Message>) session.createQuery("SELECT p FROM Message p WHERE p.question_id = :id")
+                    .setParameter("id", question).list();
+            transaction.commit();
+            log.info("message list get : " + messageList.toString());
+            return messageList;
+        } catch (HibernateException e) {
             log.error("hibernate exeption : " + e);
-            if(transaction != null)
+            if (transaction != null)
                 transaction.rollback();
             return null;
         }
@@ -82,11 +80,10 @@ public class MessageDaoImpl implements IDAO<Message> {
             transaction.commit();
             log.info("message list get : " + messageList.toString());
             return messageList;
-        }catch (HibernateException e)
-        {
+        } catch (HibernateException e) {
             log.error("hibernate exeption : " + e);
-           if(transaction != null)
-            transaction.rollback();
+            if (transaction != null)
+                transaction.rollback();
             return null;
         }
     }
@@ -107,50 +104,50 @@ public class MessageDaoImpl implements IDAO<Message> {
             log.info("message list get : " + messageList.toString());
             transaction.commit();
             return messageList;
-        }catch (HibernateException e){
-        if(transaction!=null)
-            transaction.rollback();
-        log.error(e);
-        return null;
-    }
+        } catch (HibernateException e) {
+            if (transaction != null)
+                transaction.rollback();
+            log.error(e);
+            return null;
+        }
     }
 
     public List<Message> getAll() {
         Session session;
         Transaction transaction = null;
-        try{
-        session = HibernateUtil.getSessionFactory().getCurrentSession();
-        transaction = session.getTransaction();
-        transaction.begin();
-        List<Message> messageList = (List<Message>) session.createQuery("SELECT p FROM Message p").list();
-        transaction.commit();
-        log.info("message list get : " + messageList.toString());
-        return messageList;
-    }catch (HibernateException e){
-        if(transaction!=null)
-            transaction.rollback();
-        log.error(e);
-        return null;
-    }
+        try {
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.getTransaction();
+            transaction.begin();
+            List<Message> messageList = (List<Message>) session.createQuery("SELECT p FROM Message p").list();
+            transaction.commit();
+            log.info("message list get : " + messageList.toString());
+            return messageList;
+        } catch (HibernateException e) {
+            if (transaction != null)
+                transaction.rollback();
+            log.error(e);
+            return null;
+        }
     }
 
     @Override
     public Message getById(Long id) {
         Session session;
         Transaction transaction = null;
-        try{
-        session = HibernateUtil.getSessionFactory().getCurrentSession();
-        transaction = session.getTransaction();
-        transaction.begin();
-        Message message = (Message) session.get(Message.class, id);
-        transaction.commit();
-        log.info("message get : " + message.toString());
-        return message;
-    }catch (HibernateException e){
-        if(transaction!=null)
-        transaction.rollback();
-        log.error(e);
-        return null;
+        try {
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.getTransaction();
+            transaction.begin();
+            Message message = (Message) session.get(Message.class, id);
+            transaction.commit();
+            log.info("message get : " + message.toString());
+            return message;
+        } catch (HibernateException e) {
+            if (transaction != null)
+                transaction.rollback();
+            log.error(e);
+            return null;
         }
     }
 
@@ -164,23 +161,23 @@ public class MessageDaoImpl implements IDAO<Message> {
 
         Session session;
         Transaction transaction = null;
-        try{
-        session = HibernateUtil.getSessionFactory().getCurrentSession();
-        transaction = session.getTransaction();
-        transaction.begin();
-        List<Message> messageList = (List<Message>) session.createQuery("SELECT p FROM Message p WHERE p.id > :id")
-                .setParameter("id", id).list();
-        transaction.commit();
+        try {
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.getTransaction();
+            transaction.begin();
+            List<Message> messageList = (List<Message>) session.createQuery("SELECT p FROM Message p WHERE p.id > :id")
+                    .setParameter("id", id).list();
+            transaction.commit();
 
-        log.info("message list get : " + messageList.toString());
+            log.info("message list get : " + messageList.toString());
 
-        return messageList;
-    }catch (HibernateException e){
-        if(transaction!=null)
-            transaction.rollback();
-        log.error(e);
-        return null;
-    }
+            return messageList;
+        } catch (HibernateException e) {
+            if (transaction != null)
+                transaction.rollback();
+            log.error(e);
+            return null;
+        }
     }
 
 
@@ -188,25 +185,25 @@ public class MessageDaoImpl implements IDAO<Message> {
 
         Session session;
         Transaction transaction = null;
-       try {
+        try {
 
 
-           session = HibernateUtil.getSessionFactory().getCurrentSession();
-           transaction = session.getTransaction();
-           transaction.begin();
-           List<Message> messageList = (List<Message>) session.createQuery("SELECT p FROM Recrord p WHERE p.message = :message")
-                   .setParameter("message", message)
-                   .list();
-           transaction.commit();
-           log.info("message get : " + message.toString());
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            transaction = session.getTransaction();
+            transaction.begin();
+            List<Message> messageList = (List<Message>) session.createQuery("SELECT p FROM Recrord p WHERE p.message = :message")
+                    .setParameter("message", message)
+                    .list();
+            transaction.commit();
+            log.info("message get : " + message.toString());
 
-           return messageList;
-       }catch (HibernateException e){
-           if(transaction!=null)
-               transaction.rollback();
-           log.error(e);
-           return null;
-       }
+            return messageList;
+        } catch (HibernateException e) {
+            if (transaction != null)
+                transaction.rollback();
+            log.error(e);
+            return null;
+        }
     }
 
     @Override
@@ -225,13 +222,13 @@ public class MessageDaoImpl implements IDAO<Message> {
             transaction.commit();
             log.info("message try be create : " + message.toString());
             return getById(id);
-        }catch (HibernateException e){
-            if(transaction!=null)
-            transaction.rollback();
+        } catch (HibernateException e) {
+            if (transaction != null)
+                transaction.rollback();
             log.error(e);
             return null;
         }
-        }
+    }
 
 }
 

@@ -10,18 +10,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 
-@Service
 public class QuestionService implements ISerivce<Question>{
 
-    @Autowired
-    QuestionDaoImpl questionDao;// = new QuestionDaoImpl();
+    QuestionDaoImpl questionDao = new QuestionDaoImpl();
 
 
     public QuestionService(){}
 
 
 
-    @Transactional
     public List<Question> getAll() {
         return questionDao.getAll();
     }
