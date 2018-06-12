@@ -31,6 +31,7 @@ public class MessageDaoImpl implements IDAO<Message> {
             transaction = session.getTransaction();
             transaction.begin();
             Message message = (Message) session.get(Message.class, id);
+            if(!transaction.wasCommitted())
             transaction.commit();
             log.info("message get : " + message.toString());
             return message;
@@ -51,6 +52,7 @@ public class MessageDaoImpl implements IDAO<Message> {
             transaction.begin();
             List<Message> messageList = (List<Message>) session.createQuery("SELECT p FROM Message p WHERE p.question_id = :id")
                     .setParameter("id", question).list();
+            if(!transaction.wasCommitted())
             transaction.commit();
             log.info("message list get : " + messageList.toString());
             return messageList;
@@ -77,6 +79,7 @@ public class MessageDaoImpl implements IDAO<Message> {
             question.setId(question_id);
             List<Message> messageList = (List<Message>) session.createQuery("SELECT p FROM Message p WHERE p.question_id = :question_id")
                     .setParameter("question_id", question).list();
+            if(!transaction.wasCommitted())
             transaction.commit();
             log.info("message list get : " + messageList.toString());
             return messageList;
@@ -102,6 +105,7 @@ public class MessageDaoImpl implements IDAO<Message> {
                     .setParameter("LastId", lastId)
                     .list();
             log.info("message list get : " + messageList.toString());
+            if(!transaction.wasCommitted())
             transaction.commit();
             return messageList;
         } catch (HibernateException e) {
@@ -120,6 +124,7 @@ public class MessageDaoImpl implements IDAO<Message> {
             transaction = session.getTransaction();
             transaction.begin();
             List<Message> messageList = (List<Message>) session.createQuery("SELECT p FROM Message p").list();
+            if(!transaction.wasCommitted())
             transaction.commit();
             log.info("message list get : " + messageList.toString());
             return messageList;
@@ -140,6 +145,7 @@ public class MessageDaoImpl implements IDAO<Message> {
             transaction = session.getTransaction();
             transaction.begin();
             Message message = (Message) session.get(Message.class, id);
+            if(!transaction.wasCommitted())
             transaction.commit();
             log.info("message get : " + message.toString());
             return message;
@@ -167,8 +173,8 @@ public class MessageDaoImpl implements IDAO<Message> {
             transaction.begin();
             List<Message> messageList = (List<Message>) session.createQuery("SELECT p FROM Message p WHERE p.id > :id")
                     .setParameter("id", id).list();
+            if(!transaction.wasCommitted())
             transaction.commit();
-
             log.info("message list get : " + messageList.toString());
 
             return messageList;
@@ -194,6 +200,7 @@ public class MessageDaoImpl implements IDAO<Message> {
             List<Message> messageList = (List<Message>) session.createQuery("SELECT p FROM Recrord p WHERE p.message = :message")
                     .setParameter("message", message)
                     .list();
+            if(!transaction.wasCommitted())
             transaction.commit();
             log.info("message get : " + message.toString());
 
@@ -213,19 +220,19 @@ public class MessageDaoImpl implements IDAO<Message> {
         Transaction transaction = null;
 
         try {
-
-
             session = HibernateUtil.getSessionFactory().getCurrentSession();
             transaction = session.getTransaction();
             transaction.begin();
             Long id = (Long) session.save(message);
+            if(!transaction.wasCommitted())
             transaction.commit();
             log.info("message try be create : " + message.toString());
+            session.close();
             return getById(id);
         } catch (HibernateException e) {
             if (transaction != null)
                 transaction.rollback();
-            log.error(e);
+             log.error(e);
             return null;
         }
     }

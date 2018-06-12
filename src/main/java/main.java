@@ -15,8 +15,13 @@ public class main {
 
         MessageService messageService = new MessageService();
         QuestionService questionService = new QuestionService();
-        System.out.println(messageService.getAll().toString());
-        System.out.println(questionService.getAll().toString());
+
+        Question question = new Question();
+
+        question.setQuestion("qwe");
+
+        questionService.saveOrUpdate(question);
+
     }
 
 }

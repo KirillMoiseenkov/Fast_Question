@@ -35,6 +35,7 @@ public class QuestionDaoImpl implements IDAO<Question> {
             transaction = session.getTransaction();
             transaction.begin();
             List<Question> questionList = session.createQuery("SELECT p FROM Question p").list();
+            if(!transaction.wasCommitted())
             transaction.commit();
             return questionList;
         } catch (HibernateException e) {
@@ -54,6 +55,7 @@ public class QuestionDaoImpl implements IDAO<Question> {
             transaction = session.getTransaction();
             transaction.begin();
             Question question = (Question) session.get(Question.class, id);
+            if(!transaction.wasCommitted())
             transaction.commit();
             return question;
         } catch (HibernateException e) {
@@ -74,6 +76,8 @@ public class QuestionDaoImpl implements IDAO<Question> {
             transaction = session.getTransaction();
             transaction.begin();
             Question newQuestion = (Question) session.merge(question);
+            if(!transaction.wasCommitted())
+            transaction.commit();
             return newQuestion;
         } catch (HibernateException e) {
             log.error(e);
@@ -93,6 +97,7 @@ public class QuestionDaoImpl implements IDAO<Question> {
             List<Question> questionList = (List<Question>) session.createQuery("SELECT p FROM Question p order by rand()")
                     .setMaxResults(count)
                     .list();
+            if(!transaction.wasCommitted())
             transaction.commit();
             return questionList;
         } catch (HibernateException e) {
@@ -114,6 +119,7 @@ public class QuestionDaoImpl implements IDAO<Question> {
             List<Question> questionList = (List<Question>) session.createQuery("SELECT p FROM Question p WHERE p.question = :question")
                     .setParameter("question", question)
                     .list();
+            if(!transaction.wasCommitted())
             transaction.commit();
             return questionList;
         } catch (HibernateException e) {
@@ -127,11 +133,13 @@ public class QuestionDaoImpl implements IDAO<Question> {
     @Override
     public Question saveOrUpdate(Question question) {
         Transaction transaction = null;
-
+        Session session = sessionFactory.getCurrentSession();
         try {
-            Session session = sessionFactory.getCurrentSession();
+
             transaction = session.getTransaction();
+            transaction.begin();
             Long id = (Long) session.save(question);
+            if(!transaction.wasCommitted())
             transaction.commit();
             return getById(id);
         } catch (HibernateException e) {
@@ -155,7 +163,8 @@ public class QuestionDaoImpl implements IDAO<Question> {
             transaction = session.getTransaction();
             transaction.begin();
             Long id = (Long) session.save(question);
-            transaction.commit();
+            if(!transaction.wasCommitted())
+                transaction.commit();
             return id;
         } catch (HibernateException e) {
             log.error(e);

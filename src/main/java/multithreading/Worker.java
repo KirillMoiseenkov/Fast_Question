@@ -104,10 +104,14 @@ public class Worker implements Runnable {
 
         } catch (IOException e) {
 
+
+
             e.printStackTrace();
         } finally {
 
             try {
+                in.close();
+                out.close();
                 socket.close();
 
             } catch (IOException e) {
